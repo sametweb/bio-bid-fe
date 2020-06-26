@@ -5,7 +5,7 @@ function Overview({ company }) {
   return (
     <>
       <h2>Overview</h2>
-      <p>{company.overview}</p>
+      {company.overview.split("\n").map((p, i) => p && <p key={i}>{p}</p>)}
       <h2>Details</h2>
       <p>Company Size: {companySize(company.companySize)}</p>
       <p>Headquarters: {company.headquarters}</p>

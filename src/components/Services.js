@@ -1,14 +1,15 @@
 import React from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Collapse from "@material-ui/core/Collapse";
+import { Divider } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import AssignmentOutlinedIcon from "@material-ui/icons/AssignmentOutlined";
-import { Divider } from "@material-ui/core";
 
 function Services({ services }) {
   const classes = useStyles();

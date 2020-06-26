@@ -13,7 +13,7 @@ import CompanyDetails from "./components/CompanyDetails";
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: "https://api.biobidlabs.com",
+  uri: "http://localhost:5000/",
 });
 
 const theme = createMuiTheme({
