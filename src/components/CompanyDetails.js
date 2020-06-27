@@ -23,7 +23,6 @@ import Overview from "./Overview";
 import Services from "./Services";
 
 function CompanyDetails(props) {
-  console.log({ props });
   const classes = useStyles();
   const { id } = props.match.params;
   const { hash } = props.location;

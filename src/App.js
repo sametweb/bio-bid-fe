@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
 import CompanyDetails from "./components/CompanyDetails";
+import Dashboard from "./components/Dashboard";
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -41,6 +42,7 @@ function App() {
           <Router>
             <Header />
             <Route path="/" exact component={Home} />
+            <Route path="/dashboard" exact component={Dashboard} />
             <Route path="/service-provider/:id" component={CompanyDetails} />
             <Footer />
           </Router>
