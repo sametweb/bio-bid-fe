@@ -8,12 +8,21 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  Badge,
 } from "@material-ui/core";
-import StarIcon from "@material-ui/icons/Star";
+import ContactMailIcon from "@material-ui/icons/ContactMail";
 import DashboardComponent from "./Dashboard/DashboardComponent";
+import BusinessIcon from "@material-ui/icons/Business";
+import ListAltIcon from "@material-ui/icons/ListAlt";
+import PublicIcon from "@material-ui/icons/Public";
+import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
+import { useQuery } from "@apollo/client";
+import { PENDING_CLAIMS_COUNT } from "../data/queries";
 
 function Dashboard(props) {
   const classes = useStyles();
+
+  const { data: pendingClaimsCount } = useQuery(PENDING_CLAIMS_COUNT);
 
   return (
     <Container className={classes.container}>
@@ -25,7 +34,7 @@ function Dashboard(props) {
           <List component="nav" className={classes.root} aria-label="contacts">
             <ListItem button onClick={() => props.history.push("#companies")}>
               <ListItemIcon className={classes.iconWrapper}>
-                <StarIcon />
+                <BusinessIcon />
               </ListItemIcon>
               <ListItemText primary="Companies" />
             </ListItem>
@@ -34,20 +43,25 @@ function Dashboard(props) {
               onClick={() => props.history.push("#pending-claims")}
             >
               <ListItemIcon className={classes.iconWrapper}>
-                <StarIcon />
+                <Badge
+                  color="secondary"
+                  badgeContent={pendingClaimsCount?.count}
+                >
+                  <ContactMailIcon />
+                </Badge>
               </ListItemIcon>
-              <ListItemText primary="Pending Claims" />
+              <ListItemText primary={`Pending Claims`} />
             </ListItem>
             <Divider />
             <ListItem button onClick={() => props.history.push("#services")}>
               <ListItemIcon className={classes.iconWrapper}>
-                <StarIcon />
+                <ListAltIcon />
               </ListItemIcon>
               <ListItemText primary="Services" />
             </ListItem>
             <ListItem button onClick={() => props.history.push("#regions")}>
               <ListItemIcon className={classes.iconWrapper}>
-                <StarIcon />
+                <PublicIcon />
               </ListItemIcon>
               <ListItemText primary="Regions" />
             </ListItem>
@@ -56,7 +70,7 @@ function Dashboard(props) {
               onClick={() => props.history.push("#therapeutic-areas")}
             >
               <ListItemIcon className={classes.iconWrapper}>
-                <StarIcon />
+                <LocalHospitalIcon />
               </ListItemIcon>
               <ListItemText primary="Therapeutic Areas" />
             </ListItem>

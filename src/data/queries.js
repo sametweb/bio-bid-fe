@@ -75,3 +75,28 @@ export const GET_COMPANY_BY_ID = gql`
     }
   }
 `;
+
+export const GET_PENDING_CLAIMS = gql`
+  query pendingClaims {
+    pendingClaims {
+      id
+      user
+      email
+      name
+      pending
+      approved
+      company {
+        id
+        name
+        logoURL
+      }
+      createdAt
+    }
+  }
+`;
+
+export const PENDING_CLAIMS_COUNT = gql`
+  query {
+    count
+  }
+`;
