@@ -7,6 +7,7 @@ import PendingClaims from "./PendingClaims";
 import Services from "./Services";
 import Regions from "./Regions";
 import TherapeuticAreas from "./TherapeuticAreas";
+import AddNewCompany from "./AddNewCompany";
 
 function DashboardComponent() {
   const { hash } = useLocation();
@@ -22,6 +23,8 @@ function DashboardComponent() {
       return <Regions />;
     case "#therapeutic-areas":
       return <TherapeuticAreas />;
+    case "#add-new-company":
+      return <AddNewCompany />;
     default:
       return <Welcome />;
   }
