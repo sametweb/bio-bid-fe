@@ -26,7 +26,11 @@ function PendingClaims(props) {
                 <Divider />
                 <Box className={classes.claim}>
                   <Box className={classes.company}>
-                    <img src={claim.company.logoURL} className={classes.logo} />
+                    <img
+                      src={claim.company.logoURL}
+                      className={classes.logo}
+                      alt={claim.company.name}
+                    />
                     <Box className={classes.info}>
                       <h3>{claim.company.name}</h3>
                       <p>

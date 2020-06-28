@@ -157,9 +157,8 @@ const useStyles = makeStyles((theme) => {
         fontWeight: 500,
         border: `1px solid #ddd`,
         boxShadow: `#eee 0 0 3px`,
-        background: "rgb(238,238,238)",
         background:
-          "linear-gradient(360deg, rgba(238,238,238,1) 0%, rgba(252,252,252,1) 58%, rgba(255,255,255,1) 100%)",
+          "rgb(238,238,238) linear-gradient(360deg, rgba(238,238,238,1) 0%, rgba(252,252,252,1) 58%, rgba(255,255,255,1) 100%)",
         borderRadius: theme.spacing(0.3),
         padding: theme.spacing(0.2, 1.5, 0.5),
         margin: theme.spacing(0, 1, 0, 0),

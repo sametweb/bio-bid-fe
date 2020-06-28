@@ -24,7 +24,7 @@ function Companies(props) {
       <Box className={classes.header}>
         <h2>Service Provider Companies</h2>
         <Box>
-          <LinkButton className={classes.button} to="/dashboard/add-new">
+          <LinkButton className={classes.button} to="/dashboard/new-company">
             + Add New Company
           </LinkButton>
         </Box>

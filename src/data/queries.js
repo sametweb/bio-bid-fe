@@ -100,3 +100,30 @@ export const PENDING_CLAIMS_COUNT = gql`
     count
   }
 `;
+
+export const GET_SERVICES = gql`
+  query serviceItems {
+    serviceItems {
+      id
+      name
+    }
+  }
+`;
+
+export const GET_REGIONS = gql`
+  query regions {
+    regions {
+      id
+      name
+    }
+  }
+`;
+
+export const GET_THERAPEUTICS = gql`
+  query therapeutics {
+    therapeutics {
+      id
+      name
+    }
+  }
+`;

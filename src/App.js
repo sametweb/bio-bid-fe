@@ -13,7 +13,29 @@ import CompanyDetails from "./components/CompanyDetails";
 import Dashboard from "./components/Dashboard";
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          serviceItems: {
+            merge(_ignored, incoming) {
+              return incoming;
+            },
+          },
+          regions: {
+            merge(_ignored, incoming) {
+              return incoming;
+            },
+          },
+          therapeutics: {
+            merge(_ignored, incoming) {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
+  }),
   uri: "http://localhost:5000/",
 });
 

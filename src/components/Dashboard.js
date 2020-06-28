@@ -1,4 +1,6 @@
 import React from "react";
+import { useQuery } from "@apollo/client";
+
 import {
   Container,
   Box,
@@ -11,12 +13,12 @@ import {
   Badge,
 } from "@material-ui/core";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
-import DashboardComponent from "./Dashboard/DashboardComponent";
 import BusinessIcon from "@material-ui/icons/Business";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import PublicIcon from "@material-ui/icons/Public";
 import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
-import { useQuery } from "@apollo/client";
+
+import DashboardComponent from "./Dashboard/DashboardComponent";
 import { PENDING_CLAIMS_COUNT } from "../data/queries";
 
 function Dashboard(props) {
