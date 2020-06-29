@@ -40,7 +40,7 @@ function Home() {
         {loading ? (
           <LoadingIndicator />
         ) : (
-          data.companies.map((company) => (
+          data?.companies.map((company) => (
             <CompanyCard key={company.id} company={company} />
           ))
         )}

@@ -127,3 +127,19 @@ export const GET_THERAPEUTICS = gql`
     }
   }
 `;
+
+export const GET_ONLY_SPECIALTIES = gql`
+  query onlySpecialties {
+    onlySpecialties {
+      name
+    }
+  }
+`;
+
+export const GET_ONLY_SUB_SPECIALTIES = gql`
+  query onlySubSpecialties {
+    onlySubSpecialties {
+      name
+    }
+  }
+`;
