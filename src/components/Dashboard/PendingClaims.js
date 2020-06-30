@@ -1,9 +1,17 @@
 import React from "react";
-import { makeStyles, Box, Button, Divider } from "@material-ui/core";
+import {
+  makeStyles,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+} from "@material-ui/core";
 import { GET_PENDING_CLAIMS } from "../../data/queries";
 import { useQuery } from "@apollo/client";
 import LoadingIndicator from "../custom/LoadingIndicator";
 import { FormatDate } from "../../helpers/formatDate";
+import CheckIcon from "@material-ui/icons/Check";
+import BlockIcon from "@material-ui/icons/Block";
 
 function PendingClaims(props) {
   const classes = useStyles();
@@ -40,16 +48,12 @@ function PendingClaims(props) {
                     </Box>
                   </Box>
                   <Box>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      style={{ marginRight: "0.5rem" }}
-                    >
-                      Approve
-                    </Button>
-                    <Button color="secondary" variant="contained">
-                      Deny
-                    </Button>
+                    <IconButton edge="end" aria-label="edit" color="primary">
+                      <CheckIcon />
+                    </IconButton>
+                    <IconButton edge="end" aria-label="edit" color="secondary">
+                      <BlockIcon />
+                    </IconButton>
                   </Box>
                 </Box>
               </React.Fragment>
@@ -81,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   claim: {
     display: "flex",
     justifyContent: "space-between",
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(1, 3, 1),
   },
   info: {
     display: "flex",

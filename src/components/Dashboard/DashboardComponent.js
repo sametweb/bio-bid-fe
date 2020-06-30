@@ -25,6 +25,8 @@ function DashboardComponent() {
       return <TherapeuticAreas />;
     case "#add-new-company":
       return <AddNewCompany />;
+    case "#edit-company":
+      return <AddNewCompany />;
     default:
       return <Welcome />;
   }

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
+
 import {
   Box,
   makeStyles,
@@ -9,42 +11,45 @@ import {
   Checkbox,
   ListItemText,
   Button,
+  TextField,
 } from "@material-ui/core";
-import { useQuery } from "@apollo/client";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import { Divider } from "@material-ui/core";
+import AssignmentOutlinedIcon from "@material-ui/icons/AssignmentOutlined";
+
 import {
   GET_ONLY_SPECIALTIES,
   GET_ONLY_SUB_SPECIALTIES,
 } from "../../data/queries";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Collapse from "@material-ui/core/Collapse";
-import { Divider } from "@material-ui/core";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import AssignmentOutlinedIcon from "@material-ui/icons/AssignmentOutlined";
 
 function AddNewCompanyPart2({ company, setCompany, servicesData }) {
   const classes = useStyles();
   const [servForm, setServForm] = useState(false);
   const [specForm, setSpecForm] = useState("");
   const [subForm, setSubForm] = useState("");
+  const [customSpecialty, setCustomSpecialty] = useState("");
+  const [customSub, setCustomSub] = useState("");
 
   const { data: onlySpecialtiesData } = useQuery(GET_ONLY_SPECIALTIES);
   const { data: onlySubSpecialtiesData } = useQuery(GET_ONLY_SUB_SPECIALTIES);
 
-  const toggleServForm = () => setServForm(!servForm);
+  const toggleServForm = () => {
+    setServForm(!servForm);
+    setSpecForm("");
+    setSubForm("");
+  };
   const toggleSpecForm = (name) => {
     setServForm(false);
     setSpecForm(specForm === name ? "" : name);
+    setSubForm("");
   };
   const toggleSubForm = (name) => {
     setServForm(false);
     setSpecForm("");
     setSubForm(subForm === name ? "" : name);
   };
-
-  console.log(company.services);
 
   return (
     <Box className={classes.wrapper}>
@@ -115,73 +120,133 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
                 className={classes.serviceName}
                 component="div"
                 id="nested-list-subheader"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+                className={classes.inputRow}
               >
                 {specForm !== service.name ? ( //Replace service title with specialty form
-                  <span>
+                  <Box
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: 20,
+                    }}
+                  >
                     <AssignmentOutlinedIcon
                       style={{ fontSize: 20, color: "#333", marginRight: 8 }}
                     />
                     {service.name}
-                  </span>
+                  </Box>
                 ) : (
-                  <FormControl
-                    variant="outlined"
-                    size="small"
-                    className={classes.specialtyInput}
+                  <Box
+                    style={{
+                      width: "80%",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                   >
-                    <InputLabel
-                      id="specialties-label"
+                    <FormControl
                       variant="outlined"
-                      style={{ backgroundColor: "white", padding: "0 5px" }}
+                      size="small"
+                      className={classes.specialtyInput}
                     >
-                      Select Specialties for {service.name}
-                    </InputLabel>
-                    <Select
-                      labelId="specialties-label"
-                      name="specialties"
-                      multiple
-                      value={company.services
-                        .find(({ name }) => name === service.name)
-                        .specialties.map(({ name }) => name)}
-                      onChange={(e) => {
+                      <InputLabel
+                        id="specialties-label"
+                        variant="outlined"
+                        style={{ backgroundColor: "white", padding: "0 5px" }}
+                      >
+                        Select Specialties for {service.name}
+                      </InputLabel>
+                      <Select
+                        labelId="specialties-label"
+                        name="specialties"
+                        multiple
+                        value={company.services
+                          .find(({ name }) => name === service.name)
+                          .specialties.map(({ name }) => name)}
+                        onChange={(e) => {
+                          setCompany({
+                            ...company,
+                            services: company.services.map((serv) =>
+                              serv.name === service.name
+                                ? {
+                                    ...serv,
+                                    specialties: e.target.value.map((name) => {
+                                      const existing = company.services
+                                        .map((s) => s)
+                                        .find((s) => s.name === service.name)
+                                        .specialties.find(
+                                          (s) => s.name === name
+                                        );
+                                      return {
+                                        name,
+                                        sub_specialties:
+                                          existing?.sub_specialties || [],
+                                      };
+                                    }),
+                                  }
+                                : serv
+                            ),
+                          });
+                        }}
+                        renderValue={(selected) =>
+                          `${selected.length} selected`
+                        }
+                        MenuProps={{
+                          PaperProps: { style: { maxHeight: 600 } },
+                        }}
+                      >
+                        {onlySpecialtiesData?.onlySpecialties.map(
+                          ({ name }) => (
+                            <MenuItem key={name} value={name}>
+                              <Checkbox
+                                checked={company.services
+                                  .find(({ name }) => name === service.name)
+                                  .specialties.map((s) => s.name)
+                                  .includes(name)}
+                              />
+                              <ListItemText primary={name} />
+                            </MenuItem>
+                          )
+                        )}
+                      </Select>
+                    </FormControl>
+                    <form
+                      className={classes.specialtyInput}
+                      style={{ margin: "8px 0 0 0" }}
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        console.log(e.target.customSpecialty.value);
                         setCompany({
                           ...company,
                           services: company.services.map((serv) =>
                             serv.name === service.name
                               ? {
                                   ...serv,
-                                  specialties: e.target.value.map((name) => ({
-                                    name,
-                                    sub_specialties: [],
-                                  })),
+                                  specialties: [
+                                    ...serv.specialties,
+                                    {
+                                      name: e.target.customSpecialty.value,
+                                      sub_specialties: [],
+                                    },
+                                  ],
                                 }
                               : serv
                           ),
                         });
-                      }}
-                      renderValue={(selected) => `${selected.length} selected`}
-                      MenuProps={{
-                        PaperProps: { style: { maxHeight: 600 } },
+                        setCustomSpecialty("");
                       }}
                     >
-                      {onlySpecialtiesData?.onlySpecialties.map(({ name }) => (
-                        <MenuItem key={name} value={name}>
-                          <Checkbox
-                            checked={company.services
-                              .find(({ name }) => name === service.name)
-                              .specialties.map((s) => s.name)
-                              .includes(name)}
-                          />
-                          <ListItemText primary={name} />
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                      <TextField
+                        name="customSpecialty"
+                        variant="outlined"
+                        size="small"
+                        style={{ width: "100%" }}
+                        label="Enter Custom Specialty"
+                        value={customSpecialty}
+                        onChange={(e) => setCustomSpecialty(e.target.value)}
+                      />
+                    </form>
+                  </Box>
                 )}
                 <Button
                   onClick={() => toggleSpecForm(service.name)}
@@ -201,44 +266,99 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
                     <ListItem
                       button
                       onClick={() => setSubForm(spec.name + service.name)} // toggle open specialty to see subs
-                      className={
-                        subForm === spec.name + service.name
-                          ? classes.active
-                          : ""
-                      }
                     >
                       {subForm === spec.name + service.name ? (
                         // Sub specialty input
-                        <FormControl
-                          variant="outlined"
-                          size="small"
-                          className={classes.specialtyInput}
+                        <Box
+                          style={{
+                            width: "80%",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
                         >
-                          <InputLabel
-                            id="sub-specialties-label"
+                          <FormControl
                             variant="outlined"
-                            style={{
-                              backgroundColor: "white",
-                              padding: "0 5px",
-                            }}
+                            size="small"
+                            className={classes.specialtyInput}
                           >
-                            Select Sub-specialties for {spec.name}
-                          </InputLabel>
-                          <Select
-                            labelId="sub-specialties-label"
-                            name="sub-specialties"
-                            multiple
-                            value={company.services
-                              .find(({ name }) => name === service.name)
-                              .specialties.map((s) => s)
-                              .find((s) => s.name === spec.name)
-                              .sub_specialties.map(({ name }) => name)}
-                            onChange={(e) => {
-                              const addedSub = e.target.value[0];
+                            <InputLabel
+                              id="sub-specialties-label"
+                              variant="outlined"
+                              style={{
+                                backgroundColor: "white",
+                                padding: "0 5px",
+                              }}
+                            >
+                              Select Sub-specialties for {spec.name}
+                            </InputLabel>
+                            <Select
+                              labelId="sub-specialties-label"
+                              name="sub-specialties"
+                              multiple
+                              value={company.services
+                                .find(({ name }) => name === service.name)
+                                .specialties.map((s) => s)
+                                .find((s) => s.name === spec.name)
+                                .sub_specialties.map(({ name }) => name)}
+                              onChange={(e) => {
+                                setCompany({
+                                  ...company,
+                                  services: company.services.map((serv) =>
+                                    service.name === serv.name
+                                      ? {
+                                          ...serv,
+                                          specialties: serv.specialties.map(
+                                            (spe) =>
+                                              spe.name === spec.name
+                                                ? {
+                                                    ...spe,
+                                                    sub_specialties: e.target.value.map(
+                                                      (name) => ({ name })
+                                                    ),
+                                                  }
+                                                : spe
+                                          ),
+                                        }
+                                      : serv
+                                  ),
+                                });
+                              }}
+                              renderValue={(selected) =>
+                                `${selected.length} selected`
+                              }
+                              MenuProps={{
+                                PaperProps: { style: { maxHeight: 600 } },
+                              }}
+                            >
+                              {onlySubSpecialtiesData?.onlySubSpecialties.map(
+                                ({ name }) => (
+                                  <MenuItem key={name} value={name}>
+                                    <Checkbox
+                                      checked={company.services
+                                        .map((s) => s)
+                                        .find(
+                                          ({ name }) => service.name === name
+                                        )
+                                        .specialties.map((s) => s)
+                                        .find(({ name }) => name === spec.name)
+                                        .sub_specialties.map((s) => s.name)
+                                        .includes(name)}
+                                    />
+                                    <ListItemText primary={name} />
+                                  </MenuItem>
+                                )
+                              )}
+                            </Select>
+                          </FormControl>
+                          <form
+                            className={classes.specialtyInput}
+                            onSubmit={(e) => {
+                              e.preventDefault();
                               setCompany({
                                 ...company,
                                 services: company.services.map((serv) =>
-                                  service.name === serv.name
+                                  serv.name === service.name
                                     ? {
                                         ...serv,
                                         specialties: serv.specialties.map(
@@ -246,9 +366,12 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
                                             spe.name === spec.name
                                               ? {
                                                   ...spe,
-                                                  sub_specialties: e.target.value.map(
-                                                    (name) => ({ name })
-                                                  ),
+                                                  sub_specialties: [
+                                                    ...spe.sub_specialties,
+                                                    {
+                                                      name: customSub,
+                                                    },
+                                                  ],
                                                 }
                                               : spe
                                         ),
@@ -256,24 +379,20 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
                                     : serv
                                 ),
                               });
-                            }}
-                            renderValue={(selected) =>
-                              `${selected.length} selected`
-                            }
-                            MenuProps={{
-                              PaperProps: { style: { maxHeight: 600 } },
+                              setCustomSub("");
                             }}
                           >
-                            {onlySubSpecialtiesData?.onlySubSpecialties.map(
-                              ({ name }) => (
-                                <MenuItem key={name} value={name}>
-                                  <Checkbox checked={false} />
-                                  <ListItemText primary={name} />
-                                </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
+                            <TextField
+                              name="customSub"
+                              variant="outlined"
+                              size="small"
+                              style={{ width: "100%" }}
+                              label="Enter Custom Sub-specialty"
+                              value={customSub}
+                              onChange={(e) => setCustomSub(e.target.value)}
+                            />
+                          </form>
+                        </Box>
                       ) : (
                         <ListItemText primary={spec.name} />
                       )}
@@ -323,7 +442,7 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    width: "80%",
+    width: "100%",
     margin: "0 auto",
   },
   root: {
@@ -341,9 +460,6 @@ const useStyles = makeStyles((theme) => ({
   subName: {
     fontSize: "0.7rem",
   },
-  active: {
-    background: "#eee",
-  },
   serviceInput: {
     width: "100%",
     margin: theme.spacing(0, 0, 3, 0),
@@ -351,8 +467,15 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  inputRow: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   specialtyInput: {
-    width: "80%",
+    width: "50%",
+    margin: theme.spacing(0, 2, 0, 0),
   },
 }));
 

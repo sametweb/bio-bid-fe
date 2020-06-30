@@ -17,6 +17,11 @@ const client = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
+          companies: {
+            merge(_ignored, incoming) {
+              return incoming;
+            },
+          },
           serviceItems: {
             merge(_ignored, incoming) {
               return incoming;
