@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, Link } from "react-router-dom";
 
-import { makeStyles, Box, IconButton } from "@material-ui/core";
+import { makeStyles, Box, IconButton, Button } from "@material-ui/core";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
@@ -10,18 +10,18 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Typography from "@material-ui/core/Typography";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteCompanyModel from "./DeleteCompanyModal";
 import { GET_COMPANIES } from "../../data/queries";
 import LoadingIndicator from "../custom/LoadingIndicator";
-import LinkButton from "../custom/LinkButton";
 
 function Companies(props) {
   const classes = useStyles();
   const [open, setOpen] = useState({ status: false, id: "", name: "" });
   const { hash } = useLocation();
-  console.log({ hash });
+
   const handleClickOpen = (company) => {
     setOpen({ status: true, id: company.id, name: company.name });
   };
@@ -35,7 +35,6 @@ function Companies(props) {
     notifyOnNetworkStatusChange: true,
   });
   const history = useHistory();
-  console.log({ networkStatus });
 
   useEffect(() => {
     refetch();
@@ -46,9 +45,15 @@ function Companies(props) {
       <Box className={classes.header}>
         <h2>Service Provider Companies</h2>
         <Box>
-          <LinkButton className={classes.button} to="#add-new-company">
-            + Add New Company
-          </LinkButton>
+          <Button
+            component={Link}
+            to="#add-new-company"
+            color="primary"
+            variant="contained"
+            startIcon={<AddCircleOutlineIcon />}
+          >
+            Add New Company
+          </Button>
         </Box>
       </Box>
       <Box>

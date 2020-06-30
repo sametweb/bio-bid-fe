@@ -144,8 +144,19 @@ function AddNewCompany(props) {
   return (
     <Box className={classes.content}>
       <Box className={classes.header}>
-        <h2>Add New Company</h2>
-        {(error || updateError) && (error.message || updateError.message)}
+        <h2>{state ? `Edit: ${state.name}` : "Add New Company"}</h2>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={state ? updateCompany : addCompany}
+        >
+          {loading || updateLoading
+            ? "loading"
+            : state
+            ? "Save Changes"
+            : "Add Company"}
+        </Button>
+        {/* {(error || updateError) && (error.message || updateError.message)} */}
       </Box>
       <Box className={classes.stepNav}>
         <Stepper activeStep={step} alternativeLabel>
@@ -155,7 +166,7 @@ function AddNewCompany(props) {
             onClick={() => setStep(1)}
             className={classes.step}
           >
-            <StepLabel>Enter Company Information</StepLabel>
+            <StepLabel>Company Information</StepLabel>
           </Step>
           <Step
             active={step === 2}
@@ -163,7 +174,7 @@ function AddNewCompany(props) {
             onClick={() => setStep(2)}
             className={classes.step}
           >
-            <StepLabel>Select All Services and Specialties</StepLabel>
+            <StepLabel>Offered Services and Specialties</StepLabel>
           </Step>
         </Stepper>
       </Box>
@@ -179,6 +190,7 @@ function AddNewCompany(props) {
                 label="Company Name"
                 size="small"
                 name="name"
+                required
               />
               <Tooltip
                 title="Please enter a unique name for your company"
@@ -503,24 +515,11 @@ function AddNewCompany(props) {
             </Box>
           </>
         ) : (
-          <>
-            <AddNewCompanyPart2
-              company={company}
-              setCompany={setCompany}
-              servicesData={servicesData}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={state ? updateCompany : addCompany}
-            >
-              {loading || updateLoading
-                ? "loading"
-                : state
-                ? "Update Company"
-                : "Add Company"}
-            </Button>
-          </>
+          <AddNewCompanyPart2
+            company={company}
+            setCompany={setCompany}
+            servicesData={servicesData}
+          />
         )}
       </Box>
     </Box>

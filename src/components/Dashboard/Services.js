@@ -37,8 +37,16 @@ function Services(props) {
   const classes = useStyles();
   const [edit, setEdit] = useState("");
   const [input, setInput] = useState("");
-
+  const [newInput, setNewInput] = useState("");
   const { loading, data } = useQuery(GET_SERVICES);
+
+  // const [createServiceItem, { loading: createdLoading }] = useMutation(
+  //   CREATE_SERVICE_ITEM,
+  //   {
+  //     onCompleted: () => setEdit(""),
+  //     onError: () => setEdit(""),
+  //   }
+  // );
 
   const [updateServiceItem, { loading: updatedLoading }] = useMutation(
     EDIT_SERVICE_ITEM,
@@ -64,6 +72,16 @@ function Services(props) {
     <Box className={classes.content}>
       <Box className={classes.header}>
         <h2>Services</h2>
+        <form
+        // onSubmit={createServiceItem}
+        >
+          <TextField
+            label="Add new service"
+            variant="outlined"
+            size="small"
+            color="primary"
+          />
+        </form>
       </Box>
       <Box>
         {loading ? (
