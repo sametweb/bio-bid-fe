@@ -117,7 +117,6 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
             aria-labelledby="nested-list-subheader"
             subheader={
               <ListSubheader
-                className={classes.serviceName}
                 component="div"
                 id="nested-list-subheader"
                 className={classes.inputRow}
@@ -136,14 +135,7 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
                     {service.name}
                   </Box>
                 ) : (
-                  <Box
-                    style={{
-                      width: "80%",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
+                  <Box className={classes.inputRow}>
                     <FormControl
                       variant="outlined"
                       size="small"
@@ -212,7 +204,7 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
                     </FormControl>
                     <form
                       className={classes.specialtyInput}
-                      style={{ margin: "8px 0 0 0" }}
+                      style={{ marginTop: 8 }}
                       onSubmit={(e) => {
                         e.preventDefault();
                         console.log(e.target.customSpecialty.value);
@@ -269,14 +261,7 @@ function AddNewCompanyPart2({ company, setCompany, servicesData }) {
                     >
                       {subForm === spec.name + service.name ? (
                         // Sub specialty input
-                        <Box
-                          style={{
-                            width: "80%",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
+                        <Box className={classes.inputRow}>
                           <FormControl
                             variant="outlined"
                             size="small"

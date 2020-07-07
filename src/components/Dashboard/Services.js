@@ -21,9 +21,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteServiceModal from "./DeleteServiceModal";
 import LoadingIndicator from "../custom/LoadingIndicator";
 import { GET_SERVICES } from "../../data/queries";
-import { EDIT_SERVICE_ITEM } from "../../data/mutations";
+import { CREATE_SERVICE_ITEM, EDIT_SERVICE_ITEM } from "../../data/mutations";
 
-function Services(props) {
+function Services() {
   const [open, setOpen] = useState({ status: false, id: "" });
 
   const handleClickOpen = (service) => {
@@ -38,101 +38,109 @@ function Services(props) {
   const [edit, setEdit] = useState("");
   const [input, setInput] = useState("");
   const [newInput, setNewInput] = useState("");
-  const { loading, data } = useQuery(GET_SERVICES);
 
-  // const [createServiceItem, { loading: createdLoading }] = useMutation(
-  //   CREATE_SERVICE_ITEM,
-  //   {
-  //     onCompleted: () => setEdit(""),
-  //     onError: () => setEdit(""),
-  //   }
-  // );
+  const { loading, data } = useQuery(GET_SERVICES, {
+    notifyOnNetworkStatusChange: true,
+  });
 
-  const [updateServiceItem, { loading: updatedLoading }] = useMutation(
+  const [createServiceItem, { loading: createLoading }] = useMutation(
+    CREATE_SERVICE_ITEM,
+    {
+      onCompleted: () => setNewInput(""),
+      refetchQueries: ["serviceItems"],
+      notifyOnNetworkStatusChange: true,
+    }
+  );
+
+  const [updateServiceItem, { loading: updateLoading }] = useMutation(
     EDIT_SERVICE_ITEM,
     {
       onCompleted: () => setEdit(""),
-      onError: () => setEdit(""),
+      refetchQueries: ["serviceItems"],
+      notifyOnNetworkStatusChange: true,
     }
   );
+
+  const onAddSubmit = (e) => {
+    e.preventDefault();
+    createServiceItem({ variables: { name: newInput } });
+  };
+
+  const onEditSubmit = (e, name) => {
+    e.preventDefault();
+    updateServiceItem({ variables: { name, updated_name: input } });
+  };
 
   const onEditButton = (service) => {
     setEdit(edit && edit === service.id ? "" : service.id);
     setInput(service.name);
   };
 
-  const onEditSubmit = (e, name) => {
-    e.preventDefault();
-    const updated_name = e.target.input.value;
-    updateServiceItem({ variables: { name, updated_name } });
-  };
-
-  console.log({ edit });
   return (
     <Box className={classes.content}>
       <Box className={classes.header}>
         <h2>Services</h2>
-        <form
-        // onSubmit={createServiceItem}
-        >
-          <TextField
-            label="Add new service"
-            variant="outlined"
-            size="small"
-            color="primary"
-          />
+        <form onSubmit={onAddSubmit}>
+          {createLoading ? (
+            <CircularProgress />
+          ) : (
+            <TextField
+              name="input"
+              label="Add New Service"
+              variant="outlined"
+              size="small"
+              color="primary"
+              value={newInput}
+              onChange={(e) => setNewInput(e.target.value)}
+              style={{ width: 250 }}
+            />
+          )}
         </form>
       </Box>
       <Box>
-        {loading ? (
-          <LoadingIndicator />
-        ) : (
-          <List className={classes.root}>
-            {data?.serviceItems.map((service) => {
-              return (
-                <ListItem key={service.id} dense button>
-                  <ListItemIcon>
-                    <ListAltIcon />
-                  </ListItemIcon>
-                  {!updatedLoading && edit === service.id ? (
-                    <form onSubmit={(e) => onEditSubmit(e, service.name)}>
-                      <TextField
-                        autoFocus
-                        name="input"
-                        variant="outlined"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        size="small"
-                      />
-                    </form>
-                  ) : updatedLoading && edit === service.id ? (
-                    <CircularProgress size={28} />
-                  ) : (
-                    <ListItemText id={service.id} primary={service.name} />
+        {loading && <LoadingIndicator />}
+        <List className={classes.root}>
+          {data?.serviceItems.map((service) => {
+            return (
+              <ListItem key={service.id} dense button>
+                <ListItemIcon>
+                  <ListAltIcon />
+                </ListItemIcon>
+                {!updateLoading && edit === service.id ? (
+                  <form onSubmit={(e) => onEditSubmit(e, service.name)}>
+                    <TextField
+                      autoFocus
+                      name="input"
+                      variant="outlined"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      size="small"
+                    />
+                  </form>
+                ) : updateLoading && edit === service.id ? (
+                  <CircularProgress size={28} />
+                ) : (
+                  <ListItemText id={service.id} primary={service.name} />
+                )}
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="edit"
+                    onClick={() => onEditButton(service)}
+                  >
+                    {edit === service.id ? <CloseIcon /> : <EditIcon />}
+                  </IconButton>
+                  <IconButton onClick={() => handleClickOpen(service)}>
+                    <DeleteForeverIcon color="secondary" />
+                  </IconButton>
+                  {open.status && service.id === open.id && (
+                    <DeleteServiceModal open={open} handleClose={handleClose} />
                   )}
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      onClick={() => onEditButton(service)}
-                    >
-                      {edit === service.id ? <CloseIcon /> : <EditIcon />}
-                    </IconButton>
-                    <IconButton onClick={() => handleClickOpen(service)}>
-                      <DeleteForeverIcon color="secondary" />
-                    </IconButton>
-                    {open.status && service.id === open.id && (
-                      <DeleteServiceModal
-                        open={open}
-                        handleClose={handleClose}
-                      />
-                    )}
-                  </ListItemSecondaryAction>
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
       </Box>
     </Box>
   );

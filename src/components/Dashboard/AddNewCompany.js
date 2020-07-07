@@ -18,6 +18,7 @@ import {
   Stepper,
   Step,
   StepLabel,
+  CircularProgress,
 } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 
@@ -34,7 +35,7 @@ import { useLocation, useHistory } from "react-router-dom";
 
 function AddNewCompany(props) {
   const classes = useStyles();
-  const [step, setStep] = useState(1);
+
   const [company, setCompany] = useState({
     name: "",
     email: "",
@@ -50,23 +51,28 @@ function AddNewCompany(props) {
     therapeutics: [],
   });
 
+  const [step, setStep] = useState(1);
+
   const history = useHistory();
+
   const { state } = useLocation();
 
   const { data: servicesData } = useQuery(GET_SERVICES);
   const { data: regionsData } = useQuery(GET_REGIONS);
   const { data: therapeuticsData } = useQuery(GET_THERAPEUTICS);
 
-  const [addCompany, { error, loading }] = useMutation(ADD_COMPANY, {
-    variables: {
-      ...company,
-      companySize: !company.companySize ? null : company.companySize,
-    },
-    awaitRefetchQueries: true,
-    refetchQueries: ["companies"],
-    notifyOnNetworkStatusChange: true,
-    onCompleted: () => history.push("#companies"),
-  });
+  const [addCompany, { error: addError, loading: addLoading }] = useMutation(
+    ADD_COMPANY,
+    {
+      variables: {
+        ...company,
+        companySize: company.companySize || null,
+      },
+      refetchQueries: ["companies"],
+      notifyOnNetworkStatusChange: true,
+      onCompleted: () => history.push("#companies"),
+    }
+  );
 
   const [
     updateCompany,
@@ -74,7 +80,7 @@ function AddNewCompany(props) {
   ] = useMutation(UPDATE_COMPANY, {
     variables: {
       ...company,
-      companySize: !company.companySize ? null : company.companySize,
+      companySize: company.companySize || null,
     },
     awaitRefetchQueries: true,
     refetchQueries: ["companies"],
@@ -145,17 +151,17 @@ function AddNewCompany(props) {
     <Box className={classes.content}>
       <Box className={classes.header}>
         <h2>{state ? `Edit: ${state.name}` : "Add New Company"}</h2>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={state ? updateCompany : addCompany}
-        >
-          {loading || updateLoading
-            ? "loading"
-            : state
-            ? "Save Changes"
-            : "Add Company"}
-        </Button>
+        {addLoading || updateLoading ? (
+          <CircularProgress />
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={state ? updateCompany : addCompany}
+          >
+            {state ? "Save Changes" : "Add Company"}
+          </Button>
+        )}
         {/* {(error || updateError) && (error.message || updateError.message)} */}
       </Box>
       <Box className={classes.stepNav}>

@@ -15,6 +15,7 @@ function DeleteServiceModal({ open, handleClose }) {
   const [deleteServiceItem, { loading }] = useMutation(DELETE_SERVICE_ITEM, {
     onCompleted: () => handleClose(),
     refetchQueries: ["serviceItems"],
+    notifyOnNetworkStatusChange: true,
   });
 
   return (

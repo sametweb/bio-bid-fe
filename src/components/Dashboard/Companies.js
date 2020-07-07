@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 import { makeStyles, Box, IconButton, Button } from "@material-ui/core";
 import List from "@material-ui/core/List";
@@ -19,8 +19,8 @@ import LoadingIndicator from "../custom/LoadingIndicator";
 
 function Companies(props) {
   const classes = useStyles();
+
   const [open, setOpen] = useState({ status: false, id: "", name: "" });
-  const { hash } = useLocation();
 
   const handleClickOpen = (company) => {
     setOpen({ status: true, id: company.id, name: company.name });
@@ -34,6 +34,7 @@ function Companies(props) {
   const { loading, data, refetch, networkStatus } = useQuery(GET_COMPANIES, {
     notifyOnNetworkStatusChange: true,
   });
+
   const history = useHistory();
 
   useEffect(() => {

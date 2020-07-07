@@ -41,7 +41,8 @@ const client = new ApolloClient({
       },
     },
   }),
-  uri: "https://biobid.herokuapp.com/",
+  // uri: "https://biobid.herokuapp.com/",
+  uri: "http://localhost:5000",
 });
 
 const theme = createMuiTheme({

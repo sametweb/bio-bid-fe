@@ -79,6 +79,15 @@ export const DELETE_COMPANY = gql`
   }
 `;
 
+export const CREATE_SERVICE_ITEM = gql`
+  mutation createServiceItem($name: String!) {
+    createServiceItem(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
 export const EDIT_SERVICE_ITEM = gql`
   mutation updateServiceItem($name: String!, $updated_name: String!) {
     updateServiceItem(name: $name, updated_name: $updated_name) {
@@ -97,6 +106,15 @@ export const DELETE_SERVICE_ITEM = gql`
   }
 `;
 
+export const CREATE_REGION = gql`
+  mutation createRegion($name: String!) {
+    createRegion(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
 export const EDIT_REGION = gql`
   mutation updateRegion($name: String!, $updated_name: String!) {
     updateRegion(name: $name, updated_name: $updated_name) {
@@ -109,6 +127,15 @@ export const EDIT_REGION = gql`
 export const DELETE_REGION = gql`
   mutation deleteRegion($name: String!) {
     deleteRegion(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+export const CREATE_THERAPEUTIC = gql`
+  mutation createTherapeutic($name: String!) {
+    createTherapeutic(name: $name) {
       id
       name
     }

@@ -16,8 +16,7 @@ import BlockIcon from "@material-ui/icons/Block";
 function PendingClaims(props) {
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery(GET_PENDING_CLAIMS);
-  console.log({ loading, error, data });
+  const { loading, data } = useQuery(GET_PENDING_CLAIMS);
 
   return (
     <Box className={classes.content}>
