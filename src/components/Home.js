@@ -31,7 +31,7 @@ function Home() {
           color="primary"
           startIcon={<Sort />}
           variant={open ? "contained" : "outlined"}
-          onClick={() => setOpen(!open)}
+          // onClick={() => setOpen(!open)}
         >
           Filter
         </Button>

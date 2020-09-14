@@ -16,10 +16,10 @@ function Header() {
         </Link>
         <Box className={classes.buttons}>
           <LinkButton to="/dashboard">Dashboard</LinkButton>
-          <LinkButton to="/login">
+          {/* <LinkButton to="/login">
             Logout
             <img src="/logo.png" alt="Login" width="30" />
-          </LinkButton>
+          </LinkButton> */}
         </Box>
       </Container>
     </Box>
